@@ -14,6 +14,8 @@ app.get('/about',(req,res)=>{
 app.get('/product',(req,res)=>{
   res.sendFile(path.join(__dirname,'public','product.html'));
 })
-app.listen(3000,()=>{
-  console.log('http://localhost:3000')
-})
+const PORT = process.env.PORT || 3000; // Use the port Render provides or default to 3000
+
+app.listen(PORT, () => {
+  console.log(`Server running at http://localhost:${PORT}`);
+});
