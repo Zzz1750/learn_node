@@ -1,29 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MongoDB Connection Status</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insert Data</title>
 </head>
 <body>
-  <h1>MongoDB Connection Status</h1>
-  <p id="status">Checking connection...</p>
+    <h1>Submit Name and Address</h1>
+    <form id="dataForm">
+        <label for="name">Name:</label><br>
+        <input type="text" id="name" name="name" required><br><br>
 
-  <script>
-    // Fetch the connection status from the server
-    fetch('/check-connection')
-      .then(response => response.json())
-      .then(data => {
-        const statusElement = document.getElementById('status');
-        if (data.success) {
-          statusElement.textContent = 'Connected to MongoDB successfully!';
-        } else {
-          statusElement.textContent = 'Failed to connect: ' + data.message;
-        }
-      })
-      .catch(error => {
-        document.getElementById('status').textContent = 'Error: ' + error.message;
-      });
-  </script>
+        <label for="address">Address:</label><br>
+        <textarea id="address" name="address" required></textarea><br><br>
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <script>
+        document.getElementById('dataForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const address = document.getElementById('address').value;
+
+            const response = await fetch('/submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, address })
+            });
+
+            const result = await response.json();
+            alert(result.message);
+        });
+    </script>
 </body>
 </html>
