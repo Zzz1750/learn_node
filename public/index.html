@@ -3,10 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>MongoDB Connection Status</title>
 </head>
 <body>
-  <a href="/about">about page</a>
-  <a href="/product">product page</a>
+  <h1>MongoDB Connection Status</h1>
+  <p id="status">Checking connection...</p>
+
+  <script>
+    // Fetch the connection status from the server
+    fetch('/check-connection')
+      .then(response => response.json())
+      .then(data => {
+        const statusElement = document.getElementById('status');
+        if (data.success) {
+          statusElement.textContent = 'Connected to MongoDB successfully!';
+        } else {
+          statusElement.textContent = 'Failed to connect: ' + data.message;
+        }
+      })
+      .catch(error => {
+        document.getElementById('status').textContent = 'Error: ' + error.message;
+      });
+  </script>
 </body>
 </html>

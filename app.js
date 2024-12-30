@@ -1,21 +1,28 @@
+require('dotenv').config(); // Load environment variables
 const express = require('express');
-const path = require('path');
-
+const { MongoClient } = require('mongodb');
 const app = express();
+const port = 3000;
 
-app.get('/',(req,res)=>{
-  res.sendFile(path.join(__dirname,'public','index.html'));
-})
+const uri = process.env.MONGO_URI; // Your MongoDB Atlas connection string
 
-app.get('/about',(req,res)=>{
-  res.sendFile(path.join(__dirname,'public','about.html'));
-})
+// Serve the HTML file
+app.use(express.static('public'));
 
-app.get('/product',(req,res)=>{
-  res.sendFile(path.join(__dirname,'public','product.html'));
-})
-const PORT = process.env.PORT || 3000; // Use the port Render provides or default to 3000
+// Route to check MongoDB connection
+app.get('/check-connection', async (req, res) => {
+  const client = new MongoClient(uri);
+  try {
+    await client.connect();
+    res.json({ success: true });
+  } catch (error) {
+    res.json({ success: false, message: error.message });
+  } finally {
+    await client.close();
+  }
+});
 
-app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
+// Start the server
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`);
 });
